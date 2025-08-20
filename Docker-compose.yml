@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgresdb
+    environment:
+      POSTGRES_USER: joaquimdb
+      POSTGRES_PASSWORD: 221026
+      POSTGRES_DB: nestdb
+    ports:
+      - '5433:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api: 
+    build: 
+      context: .
+      dockerfile: Dockerfile.api   # Certifique-se de que o nome do seu Dockerfile é exatamente assim
+    container_name: nest-api
+    env_file: .env
+    ports: 
+      - "${API_PORT}:${API_PORT}"
+    depends_on: 
+      - postgres
+    environment: 
+      PORT: ${API_PORT}  # Passa a porta para o NestJS
+      DATABASE_URL: ${DATABASE_URL_CONTEINERS}
+      JWT_SECRET: ${JWT_SECRET}
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
+    command: sh -c "npx prisma migrate deploy && npm run start:prod"
+volumes:
+  postgres_data: {}
+  
