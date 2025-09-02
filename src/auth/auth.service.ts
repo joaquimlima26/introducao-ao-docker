@@ -65,29 +65,29 @@ export class AuthService {
 
         return user;
     }
-
-    async findOrCreateGoogleUser({ googleId, email, name }) {
-        let user = await this.prisma.user.findUnique({
-            where: { googleId }
-        })
-
-        if (!user) {
-            user = await this.prisma.user.create({
-                data: {
-                    email,
-                    name,
-                    googleId
-                }
-            })
-        }
-        return user
-    }
-    singJwtforUser(user: User) {
-        const payload = {
-            sub: user.id,
-            email: user.email,
-            role: user.role
-        }
-        return this.jwt.sign(payload)
-    }
 }
+//     async findOrCreateGoogleUser({ googleId, email, name }) {
+//         let user = await this.prisma.user.findUnique({
+//             where: { googleId }
+//         })
+
+//         if (!user) {
+//             user = await this.prisma.user.create({
+//                 data: {
+//                     email,
+//                     name,
+//                     googleId
+//                 }
+//             })
+//         }
+//         return user
+//     }
+//     singJwtforUser(user: User) {
+//         const payload = {
+//             sub: user.id,
+//             email: user.email,
+//             role: user.role
+//         }
+//         return this.jwt.sign(payload)
+//     }
+// }

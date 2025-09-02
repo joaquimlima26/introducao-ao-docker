@@ -42,7 +42,7 @@ model User {
   email String @unique
   password String?
   googleId String? @unique
-  role Role @default(TURISTA)
+  role Role @default(USER)
 }
 
 model Admin {
@@ -54,6 +54,6 @@ model Admin {
 }
 
 enum Role {
-  TURISTA
+  USER
   ADMIN
 }

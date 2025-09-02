@@ -5,8 +5,10 @@ import { CloudinaryService } from './cloudinary.service';
 import { File as MulterFile } from 'multer'
 import { BadRequestException } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiTags,ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { UpdateFilmesDTO } from './dto/update-filmes';
+
+
 @Controller('filmes')
 export class FilmesController {
     constructor( private service:FilmesService, private cloudinary: CloudinaryService ){}

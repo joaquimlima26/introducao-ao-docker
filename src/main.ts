@@ -11,7 +11,7 @@ const config = new DocumentBuilder()
     .setTitle('API de Filmes')
     .setDescription('Documentação da API de Filmes com NestJS + Prisma + Swagger')
     .setVersion('1.0')
-    .addTag('filmes') // Tag opcional para categorizar as rotas
+
     .build();
 
     app.useGlobalPipes(
@@ -25,6 +25,6 @@ const config = new DocumentBuilder()
 const document = SwaggerModule.createDocument(app, config);
 SwaggerModule.setup('api', app, document); // Acessível em http://localhost:3000/api
 
-await app.listen(3001);
+await app.listen(3002);
 }
 bootstrap();
