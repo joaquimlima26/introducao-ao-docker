@@ -12,7 +12,7 @@ import { JwtAuthGuard } from '../auth/jwt.guard';
 
 
 @UseGuards(JwtAuthGuard)
-@ApiBearerAuth()
+// @ApiBearerAuth()
 @Controller('filmes')
 export class FilmesController {
     constructor( private service:FilmesService, private cloudinary: CloudinaryService ){}
@@ -120,7 +120,7 @@ export class FilmesController {
     @Put(':id')
     @UseInterceptors(FileFieldsInterceptor([{ name: 'images', maxCount: 3 }]))
     @ApiConsumes('multipart/form-data')
-    @ApiOperation({ summary: 'Atualizar um livro' })
+    @ApiOperation({ summary: 'Atualizar um Filme' })
     @ApiBody({
         description: "Formulário com dados opcionais do local a serem atualizados. Se enviar imagens, elas substituirão as anteriores.",
         schema: {
@@ -164,7 +164,7 @@ export class FilmesController {
     @ApiResponse({status: 422, description: "Erro de validação nos dados fornecidos."})
     @ApiResponse({status: 415, description: "Tipo de mídia não suportado."})
     @ApiResponse({status: 413, description: "Tamanho do arquivo excede o limite permitido."})
-    @ApiBearerAuth() // Protege esta rota com autenticação JWT na documentação Swagger
+    @ApiBearerAuth() 
     @UseGuards(AdminGuard)
     
     async update(@Param('id') id: string, @Body() data: UpdateFilmesDTO, @UploadedFiles() files: {images?: MulterFile[]}){
