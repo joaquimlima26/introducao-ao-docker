@@ -1,12 +1,18 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FilmesService } from './filmes.service';
 import { CreateFilmesDTO } from './dto/create-filmes.dto';
 import { CloudinaryService } from './cloudinary.service';
 import { File as MulterFile } from 'multer'
 import { BadRequestException } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiTags,ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { UpdateFilmesDTO } from './dto/update-filmes';
+import { AdminGuard } from '../auth/admin.guard';
+import { JwtAuthGuard } from '../auth/jwt.guard';
+
+
+@UseGuards(JwtAuthGuard)
+// @ApiBearerAuth()
 @Controller('filmes')
 export class FilmesController {
     constructor( private service:FilmesService, private cloudinary: CloudinaryService ){}
@@ -14,7 +20,7 @@ export class FilmesController {
     @Post()
     @UseInterceptors(FileFieldsInterceptor([{ name: 'images', maxCount: 3 }]))
     @ApiConsumes('multipart/form-data')
-    @ApiOperation({summary: "Casdastrar um novo livro"})
+    @ApiOperation({summary: "Casdastrar um novo filme"})
     @ApiBody({
         description: "Formulario com os dados dos Filmes.",
         schema: {
@@ -59,6 +65,8 @@ export class FilmesController {
     @ApiResponse({status: 201, description: "Filme criado com sucesso."})
     @ApiResponse({status: 400, description: "Dados inválidos fornecidos."})
     @ApiResponse({status: 500, description: "Erro interno do servidor."})
+    @ApiBearerAuth() // Protege esta rota com autenticação JWT na documentação Swagger
+    @UseGuards(AdminGuard)
     async create(@Body() data: CreateFilmesDTO, @UploadedFiles() files: {images?: MulterFile[]}){
         if (!files.images || files.images.length === 0) {
             throw new BadRequestException('Pelo menos uma imagem deve ser enviada.');
@@ -112,7 +120,7 @@ export class FilmesController {
     @Put(':id')
     @UseInterceptors(FileFieldsInterceptor([{ name: 'images', maxCount: 3 }]))
     @ApiConsumes('multipart/form-data')
-    @ApiOperation({ summary: 'Atualizar local com ou sem novas imagens' })
+    @ApiOperation({ summary: 'Atualizar um Filme' })
     @ApiBody({
         description: "Formulário com dados opcionais do local a serem atualizados. Se enviar imagens, elas substituirão as anteriores.",
         schema: {
@@ -156,6 +164,8 @@ export class FilmesController {
     @ApiResponse({status: 422, description: "Erro de validação nos dados fornecidos."})
     @ApiResponse({status: 415, description: "Tipo de mídia não suportado."})
     @ApiResponse({status: 413, description: "Tamanho do arquivo excede o limite permitido."})
+    @ApiBearerAuth() 
+    @UseGuards(AdminGuard)
     
     async update(@Param('id') id: string, @Body() data: UpdateFilmesDTO, @UploadedFiles() files: {images?: MulterFile[]}){
         const newImages = files.images?.map(file => file.buffer);
@@ -177,6 +187,8 @@ export class FilmesController {
         status: 500,
         description: 'Erro interno do servidor.',
       })
+      @ApiBearerAuth() // Protege esta rota com autenticação JWT na documentação Swagger
+      @UseGuards(AdminGuard)
     async delete(@Param('id') id: string){
         return this.service.delete(id)
     }

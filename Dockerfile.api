@@ -1,20 +1,19 @@
-# Etapa 01: Define imagem base do Node
+
+# Etapa 01: Definir a imagem base do Node 
 FROM node:20-alpine
 
-# Etapa 02: Define o diretório de trabalho do container 
+# Etapa 02: Definir o diretório de trabalhodo container
 WORKDIR /app
 
-# Etapa 03: Copiar arquivos de dependência e instalar 
-COPY package*.json ./
-RUN npm install 
+# Etapa 03: Copiar arquivos de depêndencia e instalar
+COPY package*.json /.
 
-# Etapa 04: Copiar o restante dos arquivos e gerar Prisma
+RUN npm install
+
+# Etapa 04: Copiar o restantes dos arquivos e compilar o projeto
 COPY . .
 RUN npx prisma generate
 RUN npm run build
 
-# Etapa 05: Expor a porta da aplicação 
+# Etapa 05: Expor a porta da aplicação
 EXPOSE 3000
-
-# Etapa 06: Comando padrão
-CMD "npm"

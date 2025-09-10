@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { FilmesModule } from './filmes/filmes.module';
-import { PrismaService } from './prisma/prisma.service';
 import { PrismaModule } from './prisma/prisma.module';
+import { AuthModule } from './auth/auth.module';
+import { FilmesModule } from './filmes/filmes.module';
+
 
 @Module({
-  imports: [FilmesModule, PrismaModule],
+  imports: [PrismaModule, AuthModule, FilmesModule],
   controllers: [],
   providers: [],
 })

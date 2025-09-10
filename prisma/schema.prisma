@@ -35,3 +35,25 @@ enum filmesGender {
   MUSICAL
   DOCUMENTARIO
 }
+
+model User {
+  id String @id @default(uuid())
+  name String
+  email String @unique
+  password String?
+  googleId String? @unique
+  role Role @default(USER)
+}
+
+model Admin {
+  id String @id @default(uuid())
+  name String
+  email String @unique
+  password String
+  role Role @default(ADMIN)
+}
+
+enum Role {
+  USER
+  ADMIN
+}
